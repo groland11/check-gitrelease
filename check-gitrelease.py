@@ -7,8 +7,12 @@ import re
 import sys
 import subprocess
 
+from urllib.parse import urlparse
+
+
 __license__ = "GPLv3"
 __version__ = "0.9"
+
 
 latest_version = ""
 local_version = ""
@@ -85,7 +89,13 @@ def main():
     else:
         logger.error(f"Unable to get version from file {dirlink}")
         exit(3)
-    
+
+    # Validate remote git url
+    result = urlparse(args.remote)
+    if result.scheme not in ["http", "https"] or result.netloc == "":
+        logger.error(f"ERROR: invalid remote git repo {args.remote}")
+        exit(3)
+
     # Get latest Bacula-Web version from GitHub repo
     logger.debug(f"Remote git repo: {args.remote}")
     try:
