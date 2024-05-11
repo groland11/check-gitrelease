@@ -5,7 +5,7 @@
 ![license](https://img.shields.io/github/license/groland11/check-gitrelease.svg)
 
 # check-gitrelease
-Check if local installed version of a program is the latest release on GitHub
+Check if local installed version of a program is the latest release on GitHub, or if there is an update available for download.
 
 The local installed program needs to be a symbolic link to the downloaded version that includes the version string in its program name.
 
@@ -16,6 +16,12 @@ lrwxrwxrwx  1 ubuntu users         29 Mär 31 15:49  digikam -> digiKam-8.2.0-x8
 ```
 
 The script queries all tagged releases from the remote git repository and compares the latest release version string with the version string from the local file.
+
+## Why not web scraping?
+You can also use the Python BeautifulSoup4 module to extract version information from a website, but web scraping has several disadvantages:
+- The URL of those websites changes over time, and you have to continuously adapt your script.
+- The contents or HTML structure of websites can change too.
+- Project websites are sometimes outdated or not maintained any longer.
 
 ## Usage
 ```
@@ -38,7 +44,7 @@ options:
 ```
 
 
-Example:
+## Example:
 ```
 $ check-gitrelease.py -l ~/Downloads/digikam -r https://invent.kde.org/graphics/digikam
 There is a new version 8.3.0 available for download at https://invent.kde.org/graphics/digikam. Please update!
