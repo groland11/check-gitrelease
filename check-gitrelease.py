@@ -82,6 +82,9 @@ def main():
     except FileNotFoundError as e:
         logger.error(f"ERROR: invalid local symbolic link {args.local}")
         exit(3)
+    except OSError as e:
+        logger.error(f"ERROR: file is not a symbolic link {args.local}")
+        exit(3)
 
     m = re.search(r"[0-9.]+", dirlink)
     if m:
