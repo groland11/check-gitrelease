@@ -86,7 +86,9 @@ def main():
         logger.error(f"ERROR: file is not a symbolic link {args.local}")
         exit(3)
 
-    m = re.search(r"[0-9.]+", dirlink)
+    if (index := dirlink.rfind(os.sep)) >= 0:
+        dirlink = dirlink[index+1:] 
+    m = re.search(r"[0-9][0-9.]+", dirlink)
     if m:
         local_version = m[0]
     else:
