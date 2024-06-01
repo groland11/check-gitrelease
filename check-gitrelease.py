@@ -11,8 +11,12 @@ from urllib.parse import urlparse
 
 
 __license__ = "GPLv3"
-__version__ = "0.9"
+__version__ = "0.9.1"
 
+# Check for minimum Python version
+if not sys.version_info >= (3, 8):
+    print("ERROR: Requires Python 3.8 or higher")
+    exit(1)
 
 latest_version = ""
 local_version = ""
@@ -75,7 +79,7 @@ def main():
         exit(3)
     
     # Get locally installed version
-    # Symbolic link in form of: program -> program-2.3.4-release1 (version will be 2.3.4)
+    # Symbolic link in form of: program -> /opt/program-2.3.4-release1 (version will be 2.3.4)
     logger.debug(f"Local link: {args.local}")
     try:
         dirlink = os.readlink(args.local)
@@ -86,7 +90,9 @@ def main():
         logger.error(f"ERROR: file is not a symbolic link {args.local}")
         exit(3)
 
-    m = re.search(r"[0-9.]+", dirlink)
+    if (index := dirlink.rfind(os.sep)) >= 0:
+        dirlink = dirlink[index+1:] 
+    m = re.search(r"[0-9][0-9.]+", dirlink)
     if m:
         local_version = m[0]
     else:
@@ -99,7 +105,7 @@ def main():
         logger.error(f"ERROR: invalid remote git repo {args.remote}")
         exit(3)
 
-    # Get latest Bacula-Web version from GitHub repo
+    # Get latest version from GitHub repo
     logger.debug(f"Remote git repo: {args.remote}")
     try:
         p = subprocess.run(["git", "ls-remote", "--tags", args.remote], 
